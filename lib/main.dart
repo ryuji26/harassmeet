@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:harassmeet/data/post_data.dart';
+import 'package:harassmeet/repository/post_data_dao.dart';
 import 'postPage.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
@@ -33,6 +36,18 @@ class MyWidget extends StatefulWidget {
 
 class _MyWidgetState extends State<MyWidget> {
   String? data;
+
+  int _counter = 0;
+  PostDataDao _postDataDao = PostDataDao();
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+
+    PostData postData = PostData(dateTime: DateTime.now(), count: _counter);
+    _postDataDao.savePostData(postData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +82,11 @@ class _MyWidgetState extends State<MyWidget> {
             }).toList(),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }
