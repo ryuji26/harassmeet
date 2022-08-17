@@ -8,4 +8,11 @@ class PostDataDao {
   void savePostData(PostData postData) {
     _collection.add(postData.toJson());
   }
+
+  Stream<QuerySnapshot> getSnapshot() {
+    return _collection
+        .orderBy('dateTime', descending: true)
+        .limit(5)
+        .snapshots();
+  }
 }
