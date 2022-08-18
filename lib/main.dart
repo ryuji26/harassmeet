@@ -4,8 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:harassmeet/data/post_data.dart';
 import 'package:harassmeet/repository/post_data_dao.dart';
+import 'package:harassmeet/responsive/responsive_layout.dart';
+import 'package:harassmeet/responsive/web_screen_layout.dart';
+import 'package:harassmeet/utils/colors.dart';
 import 'postPage.dart';
 import 'firebase_options.dart';
+import 'responsive/mobile_screen_layout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +25,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyWidget(),
+      theme: ThemeData.dark()
+          .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
+      home: const ResponsiveLayout(
+        webScreenLayout: WebScreenLayout(),
+        mobileScreenLayout: MobileScreenLayout(),
+      ),
     );
   }
 }
