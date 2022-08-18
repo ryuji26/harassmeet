@@ -6,8 +6,9 @@ import 'package:harassmeet/data/post_data.dart';
 import 'package:harassmeet/repository/post_data_dao.dart';
 import 'package:harassmeet/responsive/responsive_layout.dart';
 import 'package:harassmeet/responsive/web_screen_layout.dart';
+import 'package:harassmeet/screens/login_page.dart';
+import 'package:harassmeet/screens/postScreen.dart';
 import 'package:harassmeet/utils/colors.dart';
-import 'postPage.dart';
 import 'firebase_options.dart';
 import 'responsive/mobile_screen_layout.dart';
 
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: const ResponsiveLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
-      ),
+      // home: const ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),
+      home: LoginScreen(),
     );
   }
 }
@@ -86,7 +88,7 @@ class _MyWidgetState extends State<MyWidget> {
             icon: Icon(Icons.edit),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return PostPage();
+                return PostScreen();
               }));
             },
           ),
