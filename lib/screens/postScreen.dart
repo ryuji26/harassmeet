@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class PostPage extends StatefulWidget {
+class PostScreen extends StatefulWidget {
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<PostScreen> createState() => _PostScreenState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _PostScreenState extends State<PostScreen> {
   TextEditingController _textEditingController = TextEditingController();
 
   _onSubmitted(String content) {
