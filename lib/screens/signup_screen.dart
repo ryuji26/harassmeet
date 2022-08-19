@@ -3,6 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:harassmeet/resources/auth_methods.dart';
+import 'package:harassmeet/responsive/mobile_screen_layout.dart';
+import 'package:harassmeet/responsive/responsive_layout.dart';
+import 'package:harassmeet/responsive/web_screen_layout.dart';
+import 'package:harassmeet/screens/login_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
 import 'package:harassmeet/utils/utils.dart';
 import 'package:harassmeet/widgets/text_field_input.dart';
@@ -57,7 +61,21 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (res != 'success') {
       showSnackBar(res, context);
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: WebScreenLayout(),
+            mobileScreenLayout: MobileScreenLayout(),
+          ),
+        ),
+      );
     }
+  }
+
+  void navigateToLogin() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   @override
@@ -173,16 +191,16 @@ class _SignupScreenState extends State<SignupScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  child: const Text('アカウントをお持ちではありませんか？'),
+                  child: const Text('アカウントを既にお持ちですか？'),
                   padding: const EdgeInsets.symmetric(
                     vertical: 8,
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: navigateToLogin,
                   child: Container(
                     child: const Text(
-                      '新規登録',
+                      'ログインする',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

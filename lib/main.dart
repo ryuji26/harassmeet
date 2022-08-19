@@ -1,12 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:harassmeet/data/post_data.dart';
+import 'package:harassmeet/data/data.dart';
 import 'package:harassmeet/repository/post_data_dao.dart';
 import 'package:harassmeet/responsive/responsive_layout.dart';
 import 'package:harassmeet/responsive/web_screen_layout.dart';
-import 'package:harassmeet/screens/login_page.dart';
+import 'package:harassmeet/screens/login_screen.dart';
 import 'package:harassmeet/screens/postScreen.dart';
 import 'package:harassmeet/screens/signup_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
@@ -31,11 +32,31 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      // home: const ResponsiveLayout(
-      //   webScreenLayout: WebScreenLayout(),
-      //   mobileScreenLayout: MobileScreenLayout(),
-      // ),
-      home: SignupScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              return const ResponsiveLayout(
+                webScreenLayout: WebScreenLayout(),
+                mobileScreenLayout: MobileScreenLayout(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('${snapshot.error}'),
+              );
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: primaryColor,
+              ),
+            );
+          }
+          return LoginScreen();
+        },
+      ),
     );
   }
 }

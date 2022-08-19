@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:harassmeet/data/post_data.dart';
+import 'package:harassmeet/data/data.dart';
 
 class PostDataDao {
   final CollectionReference _collection =
