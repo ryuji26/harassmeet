@@ -8,6 +8,7 @@ import 'package:harassmeet/responsive/responsive_layout.dart';
 import 'package:harassmeet/responsive/web_screen_layout.dart';
 import 'package:harassmeet/screens/login_page.dart';
 import 'package:harassmeet/screens/postScreen.dart';
+import 'package:harassmeet/screens/signup_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
 import 'firebase_options.dart';
 import 'responsive/mobile_screen_layout.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       //   webScreenLayout: WebScreenLayout(),
       //   mobileScreenLayout: MobileScreenLayout(),
       // ),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
