@@ -4,7 +4,6 @@ import 'package:harassmeet/resources/auth_methods.dart';
 import 'package:harassmeet/responsive/mobile_screen_layout.dart';
 import 'package:harassmeet/responsive/responsive_layout.dart';
 import 'package:harassmeet/responsive/web_screen_layout.dart';
-import 'package:harassmeet/screens/postScreen.dart';
 import 'package:harassmeet/screens/signup_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
 import 'package:harassmeet/utils/utils.dart';
