@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:harassmeet/data/data.dart';
 import 'package:harassmeet/providers/user_provider.dart';
 import 'package:harassmeet/responsive/responsive_layout.dart';
 import 'package:harassmeet/responsive/web_screen_layout.dart';

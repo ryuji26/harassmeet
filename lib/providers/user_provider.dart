@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:harassmeet/data/data.dart';
+import 'package:harassmeet/data/user_data.dart';
 import 'package:harassmeet/resources/auth_methods.dart';
 
 class UserProvider extends ChangeNotifier {

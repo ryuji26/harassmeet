@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:harassmeet/data/data.dart';
+import 'package:harassmeet/data/user_data.dart';
 import 'package:harassmeet/resources/storage_methods.dart';
 
 class AuthMethods {
@@ -17,7 +17,7 @@ class AuthMethods {
     DocumentSnapshot snap =
         await _firestore.collection('users').doc(currentUser.uid).get();
 
-    return UserData.fromDocument(snap);
+    return UserData.fromSnap(snap);
   }
 
   // ユーザー登録
