@@ -1,15 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:harassmeet/data/user_data.dart';
 import 'package:harassmeet/providers/user_provider.dart';
 import 'package:harassmeet/resources/firestore_methods.dart';
+import 'package:harassmeet/screens/comments_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
+import 'package:harassmeet/utils/utils.dart';
 import 'package:harassmeet/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
-  const PostCard({Key? key, required this.snap}) : super(key: key);
+  const PostCard({
+    Key? key,
+    required this.snap,
+  }) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -17,6 +23,28 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+
+      commentLen = snap.docs.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +81,7 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         Text(
                           widget.snap['username'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -73,7 +101,11 @@ class _PostCardState extends State<PostCard> {
                                   'Delete',
                                 ]
                                     .map((e) => InkWell(
-                                          onTap: () {},
+                                          onTap: () async {
+                                            FirestoreMethods().deletePost(
+                                                widget.snap['postId']);
+                                            Navigator.of(context).pop();
+                                          },
                                           child: Container(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 12, horizontal: 16),
@@ -84,7 +116,7 @@ class _PostCardState extends State<PostCard> {
                               ),
                             ));
                   },
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert),
                 ),
               ],
             ),
@@ -160,7 +192,13 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentsScreen(
+                      snap: widget.snap,
+                    ),
+                  ),
+                ),
                 icon: const Icon(
                   Icons.comment_outlined,
                 ),
@@ -175,7 +213,7 @@ class _PostCardState extends State<PostCard> {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: IconButton(
-                    icon: Icon(Icons.bookmark_border),
+                    icon: const Icon(Icons.bookmark_border),
                     onPressed: () {},
                   ),
                 ),
@@ -230,7 +268,7 @@ class _PostCardState extends State<PostCard> {
                       vertical: 4,
                     ),
                     child: Text(
-                      'View all 200 comments',
+                      'View all $commentLen comments',
                       style: const TextStyle(
                         fontSize: 16,
                         color: secondaryColor,
