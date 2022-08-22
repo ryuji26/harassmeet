@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PostData {
+class Post {
   final String description;
   final String uid;
   final String username;
@@ -10,7 +10,7 @@ class PostData {
   final String postUrl;
   final String profImage;
 
-  const PostData({
+  const Post({
     required this.description,
     required this.uid,
     required this.username,
@@ -21,10 +21,10 @@ class PostData {
     required this.profImage,
   });
 
-  static PostData fromSnap(DocumentSnapshot snap) {
+  static Post fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
-    return PostData(
+    return Post(
         description: snapshot["description"],
         uid: snapshot["uid"],
         likes: snapshot["likes"],
