@@ -52,7 +52,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: const Text(
-          'Comments',
+          'コメント',
         ),
         centerTitle: false,
       ),
@@ -78,7 +78,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
           );
         },
       ),
-      // text input
       bottomNavigationBar: SafeArea(
         child: Container(
           height: kToolbarHeight,
@@ -96,8 +95,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   padding: const EdgeInsets.only(left: 16, right: 8),
                   child: TextField(
                     controller: commentEditingController,
-                    decoration: InputDecoration(
-                      hintText: 'Comment as ${user.username}',
+                    decoration: const InputDecoration(
+                      hintText: 'コメントを投稿する',
                       border: InputBorder.none,
                     ),
                   ),
@@ -113,7 +112,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: const Text(
-                    'Post',
+                    '投稿',
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),

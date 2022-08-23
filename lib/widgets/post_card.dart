@@ -66,7 +66,6 @@ class _PostCardState extends State<PostCard> {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-      // boundary needed for web
       decoration: BoxDecoration(
         border: Border.all(
           color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
@@ -140,7 +139,6 @@ class _PostCardState extends State<PostCard> {
                                                   widget.snap['postId']
                                                       .toString(),
                                                 );
-                                                // remove the dialog box
                                                 Navigator.of(context).pop();
                                               }),
                                         )

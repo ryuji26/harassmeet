@@ -14,7 +14,7 @@ import 'responsive/mobile_screen_layout.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // initialize app based on platform- web or mobile
+  // モバイルorWebを判定してアプリを初期化
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Instagram Clone',
+        title: 'Harassmeet',
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
@@ -55,9 +55,9 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
-              // Checking if the snapshot has any data or not
+              // スナップショットのデータの有無を確認する
               if (snapshot.hasData) {
-                // if snapshot has data which means user is logged in then we check the width of screen and accordingly display the screen layout
+                // スナップショットにデータがあり、ログインしている場合はWebかモバイルかを確認し、それに応じたレイアウトを表示する
                 return const ResponsiveLayout(
                   mobileScreenLayout: MobileScreenLayout(),
                   webScreenLayout: WebScreenLayout(),
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
               }
             }
 
-            // means connection to future hasn't been made yet
+            // スナップショットのconnectionStateがwaitingなら、Circularを表示
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),

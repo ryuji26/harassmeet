@@ -35,25 +35,25 @@ class _SignupScreenState extends State<SignupScreen> {
     _usernameController.dispose();
   }
 
+  // ユーザー登録のメソッド
   void signUpUser() async {
-    // set loading to true
     setState(() {
       _isLoading = true;
     });
 
-    // signup user using our authmethodds
+    // authmethodsを使ってユーザー登録
     String res = await AuthMethods().signUpUser(
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
         bio: _bioController.text,
         file: _image!);
-    // if string returned is sucess, user has been created
+    // successが返された場合、ユーザー登録が成功
     if (res == "success") {
       setState(() {
         _isLoading = false;
       });
-      // navigate to the home screen
+      // HomeScreenに移動
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResponsiveLayout(
@@ -66,14 +66,14 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         _isLoading = false;
       });
-      // show the error
+      // エラーの表示
       showSnackBar(context, res);
     }
   }
 
+  // CircleAvatarに選択した画像を表示する
   selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
-    // set state because we need to display the image we selected on the circle avatar
     setState(() {
       _image = im;
     });
