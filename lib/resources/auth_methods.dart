@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:harassmeet/data/user_data.dart' as model;
 import 'package:harassmeet/resources/storage_methods.dart';
 
@@ -16,6 +17,31 @@ class AuthMethods {
         await _firestore.collection('users').doc(currentUser.uid).get();
 
     return model.User.fromSnap(documentSnapshot);
+  }
+
+  Future<String> onSignInGoogle() async {
+    String res = "Some error Occurred";
+    try {
+      final googleLogin = GoogleSignIn(scopes: [
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ]);
+
+      GoogleSignInAccount? signinAcount = await googleLogin.signIn();
+      if (signinAcount == null) return res;
+
+      GoogleSignInAuthentication auth = await signinAcount.authentication;
+      final credential = GoogleAuthProvider.credential(
+        idToken: auth.idToken,
+        accessToken: auth.accessToken,
+      );
+      FirebaseAuth.instance.signInWithCredential(credential);
+
+      res = "success";
+    } catch (err) {
+      return err.toString();
+    }
+    return res;
   }
 
   Future<String> signUpUser({

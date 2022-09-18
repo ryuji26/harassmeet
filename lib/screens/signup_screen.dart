@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:harassmeet/resources/auth_methods.dart';
 import 'package:harassmeet/responsive/mobile_screen_layout.dart';
@@ -70,6 +72,38 @@ class _SignupScreenState extends State<SignupScreen> {
       showSnackBar(context, res);
     }
   }
+
+//TODO google_sign_inがFlutterFire CLIに対応するまで
+// //Googleアカウントでサインアップ
+//   void googleSignup() async {
+//     setState(() {
+//       _isLoading = true;
+//     });
+
+//     // authmethodsを使ってユーザー登録
+//     String res = await AuthMethods().onSignInGoogle();
+//     // successが返された場合、ユーザー登録が成功
+//     if (res == "success") {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//       // HomeScreenに移動
+//       Navigator.of(context).pushReplacement(
+//         MaterialPageRoute(
+//           builder: (context) => const ResponsiveLayout(
+//             mobileScreenLayout: MobileScreenLayout(),
+//             webScreenLayout: WebScreenLayout(),
+//           ),
+//         ),
+//       );
+//     } else {
+//       setState(() {
+//         _isLoading = false;
+//       });
+//       // エラーの表示
+//       showSnackBar(context, res);
+//     }
+//   }
 
   // CircleAvatarに選択した画像を表示する
   selectImage() async {
@@ -182,6 +216,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 onTap: signUpUser,
               ),
+              //TODO google_sign_inがFlutterFire CLIに対応するまで延期
+              // SignInButton(Buttons.Google, onPressed: () {
+              //   googleSignup();
+              // }),
               const SizedBox(
                 height: 12,
               ),
