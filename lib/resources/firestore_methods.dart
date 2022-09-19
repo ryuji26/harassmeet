@@ -8,22 +8,20 @@ import 'package:uuid/uuid.dart';
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String> uploadPost(String description, Uint8List file, String uid,
-      String username, String profImage) async {
+  Future<String> uploadPost(
+    String description,
+    String uid,
+  ) async {
     String res = "Some error occurred";
     try {
-      String photoUrl =
-          await StorageMethods().uploadImageToStorage('posts', file, true);
       String postId = const Uuid().v1();
       Post post = Post(
         description: description,
         uid: uid,
-        username: username,
         likes: [],
+        disagree: [],
         postId: postId,
         datePublished: DateTime.now(),
-        postUrl: photoUrl,
-        profImage: profImage,
       );
       _firestore.collection('posts').doc(postId).set(post.toJson());
       res = "success";
@@ -54,8 +52,29 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> postComment(String postId, String text, String uid,
-      String name, String profilePic) async {
+  Future<String> disagreePost(String postId, String uid, List likes) async {
+    String res = "Some error occurred";
+    try {
+      if (likes.contains(uid)) {
+        // Firestoreのdisagreeにuidがある場合削除する
+        _firestore.collection('posts').doc(postId).update({
+          'disagree': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        // uidをdisagreeに追加
+        _firestore.collection('posts').doc(postId).update({
+          'disagree': FieldValue.arrayUnion([uid])
+        });
+      }
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> postComment(
+      String postId, String text, String uid, String name) async {
     String res = "Some error occurred";
     try {
       if (text.isNotEmpty) {
@@ -66,7 +85,6 @@ class FireStoreMethods {
             .collection('comments')
             .doc(commentId)
             .set({
-          'profilePic': profilePic,
           'name': name,
           'uid': uid,
           'text': text,

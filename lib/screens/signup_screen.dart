@@ -1,8 +1,4 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:harassmeet/resources/auth_methods.dart';
 import 'package:harassmeet/responsive/mobile_screen_layout.dart';
@@ -12,7 +8,6 @@ import 'package:harassmeet/screens/login_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
 import 'package:harassmeet/utils/utils.dart';
 import 'package:harassmeet/widgets/text_field_input.dart';
-import 'package:image_picker/image_picker.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -27,7 +22,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   bool _isLoading = false;
-  Uint8List? _image;
 
   @override
   void dispose() {
@@ -45,11 +39,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
     // authmethodsを使ってユーザー登録
     String res = await AuthMethods().signUpUser(
-        email: _emailController.text,
-        password: _passwordController.text,
-        username: _usernameController.text,
-        bio: _bioController.text,
-        file: _image!);
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+    );
     // successが返された場合、ユーザー登録が成功
     if (res == "success") {
       setState(() {
@@ -105,14 +99,6 @@ class _SignupScreenState extends State<SignupScreen> {
 //     }
 //   }
 
-  // CircleAvatarに選択した画像を表示する
-  selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = im;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,29 +121,6 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(
                 height: 64,
-              ),
-              Stack(
-                children: [
-                  _image != null
-                      ? CircleAvatar(
-                          radius: 64,
-                          backgroundImage: MemoryImage(_image!),
-                          backgroundColor: Colors.red,
-                        )
-                      : const CircleAvatar(
-                          radius: 64,
-                          backgroundImage: NetworkImage(
-                              'https://knsoza1.com/wp-content/uploads/2020/07/70b3dd52350bf605f1bb4078ef79c9b9.png'),
-                        ),
-                  Positioned(
-                    bottom: -10,
-                    left: 80,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: const Icon(Icons.add_a_photo),
-                    ),
-                  )
-                ],
               ),
               const SizedBox(
                 height: 24,

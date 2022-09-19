@@ -72,13 +72,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: CircularProgressIndicator(),
           )
         : Scaffold(
-            appBar: AppBar(
-              backgroundColor: mobileBackgroundColor,
-              title: Text(
-                userData['username'],
-              ),
-              centerTitle: false,
-            ),
             body: ListView(
               children: [
                 Padding(
@@ -87,13 +80,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(
-                              userData['photoUrl'],
-                            ),
-                            radius: 40,
-                          ),
                           Expanded(
                             flex: 1,
                             child: Column(
@@ -103,9 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    buildStatColumn(postLen, "posts"),
-                                    buildStatColumn(followers, "followers"),
-                                    buildStatColumn(following, "following"),
+                                    buildStatColumn(postLen, "投稿数"),
                                   ],
                                 ),
                                 Row(
@@ -177,27 +161,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.only(
-                          top: 15,
-                        ),
-                        child: Text(
-                          userData['username'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.only(
-                          top: 1,
-                        ),
-                        child: Text(
-                          userData['bio'],
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -228,10 +191,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         DocumentSnapshot snap =
                             (snapshot.data! as dynamic).docs[index];
 
-                        return Image(
-                          image: NetworkImage(snap['postUrl']),
-                          fit: BoxFit.cover,
+                        return Column(
+                          children: [
+                            Text(
+                              "${snap['description']}",
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                            Text(
+                              'ハラスメントだと思う ${snap['likes'].length} 人',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                            Text(
+                              'ハラスメントだと思わない ${snap['disagree'].length} 人',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          ],
                         );
+                        // return Image(
+                        //   image: NetworkImage(snap['postUrl']),
+                        //   fit: BoxFit.cover,
+                        // );
                       },
                     );
                   },
