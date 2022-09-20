@@ -107,11 +107,13 @@ class _PostCardState extends State<PostCard> {
                       : const Icon(
                           Icons.check_circle_outline,
                         ),
-                  onPressed: () => FireStoreMethods().likePost(
-                    widget.snap['postId'].toString(),
-                    user.uid,
-                    widget.snap['likes'],
-                  ),
+                  onPressed: widget.snap['disagree'].contains(user.uid)
+                      ? null
+                      : () => FireStoreMethods().likePost(
+                            widget.snap['postId'].toString(),
+                            user.uid,
+                            widget.snap['likes'],
+                          ),
                 ),
               ),
               LikeAnimation(
@@ -126,11 +128,13 @@ class _PostCardState extends State<PostCard> {
                       : const Icon(
                           Icons.highlight_off,
                         ),
-                  onPressed: () => FireStoreMethods().disagreePost(
-                    widget.snap['postId'].toString(),
-                    user.uid,
-                    widget.snap['disagree'],
-                  ),
+                  onPressed: widget.snap['likes'].contains(user.uid)
+                      ? null
+                      : () => FireStoreMethods().disagreePost(
+                            widget.snap['postId'].toString(),
+                            user.uid,
+                            widget.snap['disagree'],
+                          ),
                 ),
               ),
               // IconButton(
