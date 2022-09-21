@@ -194,11 +194,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return Column(
                           children: [
                             Text(
-                              "${snap['description']}",
+                              "${snap['title']}",
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                             Text(
-                              'ハラスメントだと思う ${snap['likes'].length} 人',
+                              'ハラスメントだと思う ${snap['agree'].length} 人',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                             Text(

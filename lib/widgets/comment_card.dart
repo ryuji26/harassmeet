@@ -11,12 +11,6 @@ class CommentCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: Row(
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-              snap.data()['profilePic'],
-            ),
-            radius: 18,
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 16),

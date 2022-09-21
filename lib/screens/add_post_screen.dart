@@ -1,12 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
 import 'package:harassmeet/providers/user_provider.dart';
 import 'package:harassmeet/resources/firestore_methods.dart';
+import 'package:harassmeet/screens/feed_screen.dart';
 import 'package:harassmeet/utils/colors.dart';
 import 'package:harassmeet/utils/utils.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -18,6 +16,7 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   bool isLoading = false;
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
   void postImage(
@@ -31,6 +30,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     try {
       // upload to storage and db
       String res = await FireStoreMethods().uploadPost(
+        _titleController.text,
         _descriptionController.text,
         uid,
       );
@@ -60,6 +60,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   void dispose() {
     super.dispose();
     _descriptionController.dispose();
+    _titleController.dispose();
   }
 
   @override
@@ -102,9 +103,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextField(
-                  controller: _descriptionController,
+                  controller: _titleController,
                   decoration: const InputDecoration(
-                      hintText: "ルーム名", border: InputBorder.none),
+                      hintText: "相談タイトル", border: InputBorder.none),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                      hintText: "相談内容", border: InputBorder.none),
                 ),
                 const SizedBox(
                   height: 8,
@@ -117,7 +125,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           userProvider.getUser.uid,
                           userProvider.getUser.username,
                         );
-                        Navigator.of(context).pop();
                       },
                       child: const Text(
                         "投稿する",

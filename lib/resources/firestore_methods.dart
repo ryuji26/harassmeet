@@ -1,14 +1,12 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:harassmeet/data/post.dart';
-import 'package:harassmeet/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<String> uploadPost(
+    String title,
     String description,
     String uid,
   ) async {
@@ -16,9 +14,10 @@ class FireStoreMethods {
     try {
       String postId = const Uuid().v1();
       Post post = Post(
+        title: title,
         description: description,
         uid: uid,
-        likes: [],
+        agree: [],
         disagree: [],
         postId: postId,
         datePublished: DateTime.now(),
@@ -31,18 +30,18 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> likePost(String postId, String uid, List likes) async {
+  Future<String> likePost(String postId, String uid, List agree) async {
     String res = "Some error occurred";
     try {
-      if (likes.contains(uid)) {
-        // Firestoreのlikesにuidがある場合削除する
+      if (agree.contains(uid)) {
+        // Firestoreのagreeにuidがある場合削除する
         _firestore.collection('posts').doc(postId).update({
-          'likes': FieldValue.arrayRemove([uid])
+          'agree': FieldValue.arrayRemove([uid])
         });
       } else {
-        // uidをlikesに追加
+        // uidをagreeに追加
         _firestore.collection('posts').doc(postId).update({
-          'likes': FieldValue.arrayUnion([uid])
+          'agree': FieldValue.arrayUnion([uid])
         });
       }
       res = 'success';
@@ -52,10 +51,10 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> disagreePost(String postId, String uid, List likes) async {
+  Future<String> disagreePost(String postId, String uid, List agree) async {
     String res = "Some error occurred";
     try {
-      if (likes.contains(uid)) {
+      if (agree.contains(uid)) {
         // Firestoreのdisagreeにuidがある場合削除する
         _firestore.collection('posts').doc(postId).update({
           'disagree': FieldValue.arrayRemove([uid])

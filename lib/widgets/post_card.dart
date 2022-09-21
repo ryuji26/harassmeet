@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:harassmeet/data/user_data.dart' as model;
 import 'package:harassmeet/providers/user_provider.dart';
@@ -7,7 +6,6 @@ import 'package:harassmeet/utils/colors.dart';
 import 'package:harassmeet/utils/global_variable.dart';
 import 'package:harassmeet/utils/utils.dart';
 import 'package:harassmeet/widgets/like_animation.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
@@ -22,31 +20,31 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  int commentLen = 0;
+  // int commentLen = 0;
   bool isLikeAnimating = false;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchCommentLen();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchCommentLen();
+  // }
 
-  fetchCommentLen() async {
-    try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection('posts')
-          .doc(widget.snap['postId'])
-          .collection('comments')
-          .get();
-      commentLen = snap.docs.length;
-    } catch (err) {
-      showSnackBar(
-        context,
-        err.toString(),
-      );
-    }
-    setState(() {});
-  }
+  // fetchCommentLen() async {
+  //   try {
+  //     QuerySnapshot snap = await FirebaseFirestore.instance
+  //         .collection('posts')
+  //         .doc(widget.snap['postId'])
+  //         .collection('comments')
+  //         .get();
+  //     commentLen = snap.docs.length;
+  //   } catch (err) {
+  //     showSnackBar(
+  //       context,
+  //       err.toString(),
+  //     );
+  //   }
+  //   setState(() {});
+  // }
 
   deletePost(String postId) async {
     try {
@@ -86,7 +84,31 @@ class _PostCardState extends State<PostCard> {
                 style: const TextStyle(color: primaryColor),
                 children: [
                   TextSpan(
+                    text: ' ${widget.snap['title']}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(
+              top: 8,
+            ),
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(color: primaryColor),
+                children: [
+                  TextSpan(
                     text: ' ${widget.snap['description']}',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -94,12 +116,21 @@ class _PostCardState extends State<PostCard> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
+            children: [
+              DefaultTextStyle(
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2!
+                      .copyWith(fontWeight: FontWeight.w800),
+                  child: Text(
+                    'ハラスメントだと思う ${widget.snap['agree'].length} 人',
+                    style: Theme.of(context).textTheme.bodyText2,
+                  )),
               LikeAnimation(
-                isAnimating: widget.snap['likes'].contains(user.uid),
+                isAnimating: widget.snap['agree'].contains(user.uid),
                 smallLike: true,
                 child: IconButton(
-                  icon: widget.snap['likes'].contains(user.uid)
+                  icon: widget.snap['agree'].contains(user.uid)
                       ? const Icon(
                           Icons.check_circle_outline,
                           color: Colors.green,
@@ -112,10 +143,24 @@ class _PostCardState extends State<PostCard> {
                       : () => FireStoreMethods().likePost(
                             widget.snap['postId'].toString(),
                             user.uid,
-                            widget.snap['likes'],
+                            widget.snap['agree'],
                           ),
                 ),
               ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              DefaultTextStyle(
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2!
+                      .copyWith(fontWeight: FontWeight.w800),
+                  child: Text(
+                    'ハラスメントだと思わない ${widget.snap['disagree'].length} 人',
+                    style: Theme.of(context).textTheme.bodyText2,
+                  )),
               LikeAnimation(
                 isAnimating: widget.snap['disagree'].contains(user.uid),
                 smallLike: true,
@@ -128,7 +173,7 @@ class _PostCardState extends State<PostCard> {
                       : const Icon(
                           Icons.highlight_off,
                         ),
-                  onPressed: widget.snap['likes'].contains(user.uid)
+                  onPressed: widget.snap['agree'].contains(user.uid)
                       ? null
                       : () => FireStoreMethods().disagreePost(
                             widget.snap['postId'].toString(),
@@ -151,63 +196,34 @@ class _PostCardState extends State<PostCard> {
               // ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                DefaultTextStyle(
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2!
-                        .copyWith(fontWeight: FontWeight.w800),
-                    child: Text(
-                      'ハラスメントだと思う ${widget.snap['likes'].length} 人',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    )),
-                DefaultTextStyle(
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2!
-                        .copyWith(fontWeight: FontWeight.w800),
-                    child: Text(
-                      'ハラスメントだと思わない ${widget.snap['disagree'].length} 人',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    )),
-
-                // InkWell(
-                //   child: Container(
-                //     child: Text(
-                //       'View all $commentLen comments',
-                //       style: const TextStyle(
-                //         fontSize: 16,
-                //         color: secondaryColor,
-                //       ),
-                //     ),
-                //     padding: const EdgeInsets.symmetric(vertical: 4),
-                //   ),
-                //   onTap: () => Navigator.of(context).push(
-                //     MaterialPageRoute(
-                //       builder: (context) => CommentsScreen(
-                //         postId: widget.snap['postId'].toString(),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Container(
-                  child: Text(
-                    DateFormat.yMMMd()
-                        .format(widget.snap['datePublished'].toDate()),
-                    style: const TextStyle(
-                      color: secondaryColor,
-                    ),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                ),
-              ],
-            ),
-          )
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: <Widget>[
+          //       InkWell(
+          //         child: Container(
+          //           child: Text(
+          //             '詳しくみる',
+          //             style: const TextStyle(
+          //               fontSize: 16,
+          //               color: secondaryColor,
+          //             ),
+          //           ),
+          //           padding: const EdgeInsets.symmetric(vertical: 4),
+          //         ),
+          //         onTap: () => Navigator.of(context).push(
+          //           MaterialPageRoute(
+          //             builder: (context) => CommentsScreen(
+          //               postId: widget.snap['postId'].toString(),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // )
         ],
       ),
     );

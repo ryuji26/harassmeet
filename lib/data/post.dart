@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  final String title;
   final String description;
   final String uid;
-  final likes;
+  final agree;
   final disagree;
   final String postId;
   final DateTime datePublished;
   const Post({
+    required this.title,
     required this.description,
     required this.uid,
-    required this.likes,
+    required this.agree,
     required this.disagree,
     required this.postId,
     required this.datePublished,
@@ -20,9 +22,10 @@ class Post {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return Post(
+      title: snapshot["title"],
       description: snapshot["description"],
       uid: snapshot["uid"],
-      likes: snapshot["likes"],
+      agree: snapshot["agree"],
       disagree: snapshot["disagree"],
       postId: snapshot["postId"],
       datePublished: snapshot["datePublished"],
@@ -30,9 +33,10 @@ class Post {
   }
 
   Map<String, dynamic> toJson() => {
+        "title": title,
         "description": description,
         "uid": uid,
-        "likes": likes,
+        "agree": agree,
         "disagree": disagree,
         "postId": postId,
         "datePublished": datePublished,

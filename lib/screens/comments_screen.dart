@@ -20,31 +20,31 @@ class _CommentsScreenState extends State<CommentsScreen> {
   final TextEditingController commentEditingController =
       TextEditingController();
 
-  void postComment(
-    String uid,
-    String name,
-  ) async {
-    try {
-      String res = await FireStoreMethods().postComment(
-        widget.postId,
-        commentEditingController.text,
-        uid,
-        name,
-      );
+  // void postComment(
+  //   String uid,
+  //   String name,
+  // ) async {
+  //   try {
+  //     String res = await FireStoreMethods().postComment(
+  //       widget.postId,
+  //       commentEditingController.text,
+  //       uid,
+  //       name,
+  //     );
 
-      if (res != 'success') {
-        showSnackBar(context, res);
-      }
-      setState(() {
-        commentEditingController.text = "";
-      });
-    } catch (err) {
-      showSnackBar(
-        context,
-        err.toString(),
-      );
-    }
-  }
+  //     if (res != 'success') {
+  //       showSnackBar(context, res);
+  //     }
+  //     setState(() {
+  //       commentEditingController.text = "";
+  //     });
+  //   } catch (err) {
+  //     showSnackBar(
+  //       context,
+  //       err.toString(),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,70 +54,104 @@ class _CommentsScreenState extends State<CommentsScreen> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: const Text(
-          'コメント',
+          '詳細',
         ),
         centerTitle: false,
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
+      body: FutureBuilder(
+        future: FirebaseFirestore.instance
             .collection('posts')
-            .doc(widget.postId)
-            .collection('comments')
-            .snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            .where('postId', isEqualTo: widget.postId)
+            .get(),
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (ctx, index) => CommentCard(
-              snap: snapshot.data!.docs[index],
+          return GridView.builder(
+            shrinkWrap: true,
+            itemCount: (snapshot.data! as dynamic).docs.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 1.5,
+              childAspectRatio: 1,
             ),
+            itemBuilder: (context, index) {
+              DocumentSnapshot snap = (snapshot.data! as dynamic).docs[index];
+
+              return Column(
+                children: [
+                  const Text('タイトル'),
+                  Text(
+                    "${snap['title']}",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  const Divider(),
+                  const Text('相談内容'),
+                  Text(
+                    "${snap['description']}",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  const Divider(),
+                  Text(
+                    'ハラスメントだと思う ${snap['agree'].length} 人',
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  Text(
+                    'ハラスメントだと思わない ${snap['disagree'].length} 人',
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                ],
+              );
+              // return Image(
+              //   image: NetworkImage(snap['postUrl']),
+              //   fit: BoxFit.cover,
+              // );
+            },
           );
         },
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: kToolbarHeight,
-          margin:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          padding: const EdgeInsets.only(left: 16, right: 8),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: TextField(
-                    controller: commentEditingController,
-                    decoration: const InputDecoration(
-                      hintText: 'コメントを投稿する',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () => postComment(
-                  user.uid,
-                  user.username,
-                ),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: const Text(
-                    '投稿',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+      // bottomNavigationBar: SafeArea(
+      //   child: Container(
+      //     height: kToolbarHeight,
+      //     margin:
+      //         EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      //     padding: const EdgeInsets.only(left: 16, right: 8),
+      //     child: Row(
+      //       children: [
+      //         Expanded(
+      //           child: Padding(
+      //             padding: const EdgeInsets.only(left: 16, right: 8),
+      //             child: TextField(
+      //               controller: commentEditingController,
+      //               decoration: const InputDecoration(
+      //                 hintText: 'コメントを投稿する',
+      //                 border: InputBorder.none,
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //         InkWell(
+      //           onTap: () => postComment(
+      //             user.uid,
+      //             user.username,
+      //           ),
+      //           child: Container(
+      //             padding:
+      //                 const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      //             child: const Text(
+      //               '投稿',
+      //               style: TextStyle(color: Colors.blue),
+      //             ),
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
